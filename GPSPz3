@@ -1,0 +1,299 @@
+#include <iostream>
+#include <ctime>
+#include <cstring>
+#include <cstdlib>
+//#include "redpolje.h"
+#include "redpokazivac.h"
+using namespace std;
+int br_izbaci=0;
+float yen=0.068;
+int br_ele;
+int pom_a=0;
+int pom_b=0;
+int br_ai=0,br_bi=0,br_ci=0,br_di=0;
+int rek=0;
+void ntorke(){
+    srand(time(0));
+    rand();
+    cout<<"Broj elementa koji zelite "<<endl;
+    cin>>br_ele;
+    int brojac=br_ele;
+    int br_ele1=br_ele*4-1;
+    cout<<"velicina polja"<<endl;
+    int *polje=new int[br_ele1];
+    for (int i=0;i<br_ele1;i=i+4){
+        polje[i]=rand()%400+100;
+        polje[i+1]=rand()%400+100;
+        polje[i+2]=rand()%6+1;
+        if(polje[i+2]==6)
+            while(1){
+                polje[i+3]=rand()%4+1;
+                if  (polje[i+3]==3|| polje[i+3]==1)break;}
+        else
+        polje[i+3]=rand()%4+1;
+        if (polje[i+3]==1) br_ai++;
+        else if (polje[i+3]==2) br_bi++;
+        else if (polje[i+3]==3) br_ci++;
+        else if (polje[i+3]==4) br_di++;
+    cout<<"-"<<endl;
+        }
+    for(int i=0;i<br_ele1;i++)
+    cout<<polje[i]<<","<<endl;
+    cout<<"------------------"<<endl;
+    klijent pom;
+    int vrijeme_sal=0;
+    int i=0;
+    do{
+    pom.ai=polje[i];
+    pom.bi=polje[i+1];
+    pom.ci=polje[i+2];
+    pom.di=polje[i+3];
+    i=i+4;
+    brojac=brojac-1;
+    cout<<"dsad"<<endl;
+    EnQueueQ(pom,red);
+    }while(brojac);
+    cout<<"red ispis-----------------------------------"<<endl;
+    for (int i=0;i<br_ele;i++){
+        klijent ispis=FrontQ(red);
+        cout<<"ai:"<<ispis.ai<<endl;
+        cout<<"bi:"<<ispis.bi<<endl;
+        cout<<"ci:"<<ispis.ci<<endl;
+        cout<<"di:"<<ispis.di<<endl;
+        cout<<endl;
+        DeQueueQ(red);
+        EnQueueQ(ispis,red);
+   }
+    }
+void add_info(){
+    //cout<<"Transakcije koje treba obaviti"<<br_ai<<":"<<br_bi<<br_ci<<br_di<<endl;
+    klijent data;
+    for (int i=0;i<br_ele;i++){
+    data=FrontQ(red);
+    DeQueueQ(red);
+    cin.ignore();
+    cout<<"Unesite ime i prezime klijenta"<<endl;
+    cin.getline(data.ime,25);
+    cin.getline(data.prezime,30);
+    cout<<"Datume rodenja DD/MM/GG  "<<endl;
+    cin>>data.dan;
+    cin>>data.mje;
+    cin>>data.god;
+    cout<<"Unesite stanje na tekucem racunu KN"<<endl;
+    cin>>data.tek_rac;
+    cout<<"Unesite stanje na deviznom racunu (YEN)"<<endl;
+    cin>>data.dev_rac;
+    EnQueueQ(data,red);}
+    system("cls");
+    cout<<"Ispis svih klijenata u stogu"<<endl;
+    klijent polje[br_ele];
+    for(int i=0;i<br_ele;i++){
+    if(!IsEmptyQ(red)){
+    polje[i]=FrontQ(red);
+    DeQueueQ(red);
+    }}
+     bool zamjena=true;
+     for(int i=br_ele-1;i>0&&zamjena; i--){
+         zamjena=false;
+         for(int j=0;j<i;j++){
+                 if(polje[j].ci>polje[j+1].ci){
+                 klijent pom=polje[j];
+                 polje[j]=polje[j+1];
+                 polje[j+1]=pom;
+                zamjena=true;
+     }
+     if(polje[j].ci==polje[j+1].ci){
+         if(polje[j].ai>polje[j+1].ai){
+             klijent pom=polje[j];
+             polje[j]=polje[j+1];
+             polje[j+1]=pom;
+             zamjena=true;
+         }
+         }
+     }
+     }
+     for(int i=0;i<br_ele;i++)
+     EnQueueQ(polje[i],red);
+    for (int i=0;i<br_ele;i++){
+    cout<<"----------------------------------"<<endl;
+    klijent ispis=FrontQ(red);
+        cout<<"Ime: "<<ispis.ime<<endl;
+        cout<<"Prezime: "<<ispis.prezime<<endl;
+        cout<<"Datum rodenja:   "<<ispis.dan<<"."<<ispis.mje<<"."<<ispis.god<<endl;
+        cout<<"Stanje na deviznom racunu:   "<<ispis.dev_rac<<" YEN"<<endl;
+        cout<<"Stanje na tekucem racunu:    "<<ispis.tek_rac<<" KN"<<endl;
+        cout<<"ai:"<<ispis.ai<<endl;
+        cout<<"bi:"<<ispis.bi<<endl;
+        cout<<"ci:"<<ispis.ci<<endl;
+        cout<<"di:"<<ispis.di<<endl;
+        cout<<endl;
+        DeQueueQ(red);
+        EnQueueQ(ispis,red);}
+    }
+void add_info_10(){
+    system("cls");
+    cout<<"Ispsi klijenata s vise od 10000 na dev.rac¸¸unu"<<endl;
+    for (int i=0;i<br_ele;i++){
+    klijent out=FrontQ(red);
+    DeQueueQ(red);
+    if (out.dev_rac*yen>=10000){
+        cout<<"Ime: "<<out.ime<<endl;
+        cout<<"Prezime: "<<out.prezime<<endl;
+        cout<<"Datum rodenja    "<<out.dan<<out.mje<<out.god<<endl;
+        cout<<"Tekuci racun "<<out.tek_rac<<endl;
+        cout<<"Devizni racun:    "<<out.dev_rac<<endl;
+        cout<<"Devizni racun pretvoren u kune:  "<<out.dev_rac*yen<<endl;
+        cout<<out.ai<<endl;
+        cout<<out.bi<<endl;
+        cout<<out.ci<<endl;
+        cout<<out.di<<endl;
+        }
+    EnQueueQ(out,red);}
+
+    }
+void test()
+{
+    for (int i=0;i<br_ele;i++){
+    cout<<"----------------------------------"<<endl;
+    klijent ispis=FrontQ(red);
+        cout<<"Ime: "<<ispis.ime<<endl;
+        cout<<"Prezime: "<<ispis.prezime<<endl;
+        cout<<"Datum rodenja:   "<<ispis.dan<<"."<<ispis.mje<<"."<<ispis.god<<endl;
+        cout<<"Stanje na deviznom racunu:   "<<ispis.dev_rac<<" YEN"<<endl;
+        cout<<"Stanje na tekucem racunu:    "<<ispis.tek_rac<<" KN"<<endl;
+        cout<<"ai:"<<ispis.ai<<endl;
+        cout<<"bi:"<<ispis.bi<<endl;
+        cout<<"ci:"<<ispis.ci<<endl;
+        cout<<"di:"<<ispis.di<<endl;
+        cout<<endl;
+        DeQueueQ(red);
+        EnQueueQ(ispis,red);}}
+void fast_trans(){
+    klijent out3;
+    for (int i=0;i<br_ele;i++){
+    out3=FrontQ(red);
+    DeQueueQ(red);
+    if (out3.di==3) {EnQueueQ(out3,red1); br_izbaci++;}
+    else EnQueueQ(out3,red);}
+    }
+void fast_trans_print(){
+    klijent out2;
+    int pom=br_izbaci;
+    while(pom>0){
+        pom--;
+        out2=FrontQ(red1);
+        DeQueueQ(red1);
+        cout<<"Ime: "<<out2.ime<<endl;
+        cout<<"Prezime: "<<out2.prezime<<endl;
+        cout<<"Datum rodenja    "<<out2.dan<<out2.mje<<out2.god<<endl;
+        cout<<"Tekuci racun "<<out2.tek_rac<<endl;
+        cout<<"Devizni racun:    "<<out2.dev_rac<<endl;
+        cout<<"Devizni racun pretvoren u kune:  "<<out2.dev_rac*yen<<endl;
+        cout<<out2.ai<<endl;
+        cout<<out2.bi<<endl;
+        cout<<out2.ci<<endl;
+        cout<<out2.di<<endl;
+        EnQueueQ(out2,red1);
+        }}
+void org_queue(){
+    cout<<"Originali stog stanje"<<endl;
+
+    for (int i=0;i<br_ele-br_izbaci;i++){
+    cout<<"----------------------------------"<<endl;
+    klijent ispis=FrontQ(red);
+        cout<<"Ime: "<<ispis.ime<<endl;
+        cout<<"Prezime: "<<ispis.prezime<<endl;
+        cout<<"Datum rodenja:   "<<ispis.dan<<"."<<ispis.mje<<"."<<ispis.god<<endl;
+        cout<<"Stanje na deviznom racunu:   "<<ispis.dev_rac<<" YEN"<<endl;
+        cout<<"Stanje na tekucem racunu:    "<<ispis.tek_rac<<" KN"<<endl;
+        cout<<"ai:"<<ispis.ai<<endl;
+        cout<<"bi:"<<ispis.bi<<endl;
+        cout<<"ci:"<<ispis.ci<<endl;
+        cout<<"di:"<<ispis.di<<endl;
+        cout<<endl;
+        DeQueueQ(red);
+        EnQueueQ(ispis,red);} }
+void del_vip(){
+    klijent ispis;
+    for(int i=0;i<br_ele-br_izbaci;i++){
+        ispis=FrontQ(red);
+        DeQueueQ(red);
+        if((ispis.god>1982&&ispis.tek_rac<100)||(ispis.ci==3&&ispis.di==1&&ispis.tek_rac+ispis.dev_rac>5000)){
+            cout<<"Ime: "<<ispis.ime<<endl;
+        cout<<"Prezime: "<<ispis.prezime<<endl;
+        cout<<"Datum rodenja:   "<<ispis.dan<<"."<<ispis.mje<<"."<<ispis.god<<endl;
+        cout<<"Stanje na deviznom racunu:   "<<ispis.dev_rac<<" YEN"<<endl;
+        cout<<"Stanje na tekucem racunu:    "<<ispis.tek_rac<<" KN"<<endl;
+        cout<<"ai:"<<ispis.ai<<endl;
+        cout<<"bi:"<<ispis.bi<<endl;
+        cout<<"ci:"<<ispis.ci<<endl;
+        cout<<"di:"<<ispis.di<<endl;
+        cout<<endl;
+        pom_a++;
+            }
+        else EnQueueQ(ispis,red);}}
+void after_vip(){
+    klijent ispis;
+    for(int i=0;i<br_ele-br_izbaci-pom_a;i++){
+        ispis=FrontQ(red);
+        DeQueueQ(red);
+        cout<<"Prezime: "<<ispis.prezime<<endl;
+        cout<<"Datum rodenja:   "<<ispis.dan<<"."<<ispis.mje<<"."<<ispis.god<<endl;
+        cout<<"Stanje na deviznom racunu:   "<<ispis.dev_rac<<" YEN"<<endl;
+        cout<<"Stanje na tekucem racunu:    "<<ispis.tek_rac<<" KN"<<endl;
+        cout<<"ai:"<<ispis.ai<<endl;
+        cout<<"bi:"<<ispis.bi<<endl;
+        cout<<"ci:"<<ispis.ci<<endl;
+        cout<<"di:"<<ispis.di<<endl;
+        cout<<endl;
+        EnQueueQ(ispis,red);
+            }
+    }
+void rekurzija(){
+    klijent rekurzivni;
+    if(IsEmptyQ(red)){cout<<"iskrcaj gotov"<<endl;return;}
+    else{
+
+    rekurzivni=FrontQ(red);
+    DeQueueQ(red);
+
+    if(rek>0){
+        rek--;
+        cout<<"Prezime: "<<rekurzivni.prezime<<endl;
+        cout<<"Datum rodenja:   "<<rekurzivni.dan<<"."<<rekurzivni.mje<<"."<<rekurzivni.god<<endl;
+        cout<<"Stanje na deviznom racunu:   "<<rekurzivni.dev_rac<<" YEN"<<endl;
+        cout<<"Stanje na tekucem racunu:    "<<rekurzivni.tek_rac<<" KN"<<endl;
+        cout<<"ai:"<<rekurzivni.ai<<endl;
+        cout<<"bi:"<<rekurzivni.bi<<endl;
+        cout<<"ci:"<<rekurzivni.ci<<endl;
+        cout<<"di:"<<rekurzivni.di<<endl;
+        rekurzija();}
+    else{
+        rekurzija();
+        EnQueueQ(rekurzivni,red);
+        }}}
+int main(){
+    int izbor;
+    InitQ(red);
+    InitQ(red1);
+
+    do{
+        cout<<"Izbor"<<endl;
+        cin>>izbor;
+        pom_b=br_ele-br_izbaci-pom_a;
+         rek=pom_b*0.3;
+        switch(izbor){
+            case 1:ntorke();break;
+            case 2:add_info();break;
+            case 3:add_info_10();break;
+            case 4:fast_trans();break;
+            case 5:fast_trans_print();break;
+            case 6:org_queue();break;
+            case 7:del_vip();system("pause");cout<<"Stanje reda nakon brisanja"<<endl;after_vip();break;
+            case 8:rekurzija();break;}
+
+    }while(izbor!=0);
+
+
+
+}
