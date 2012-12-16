@@ -1,0 +1,30 @@
+struct klijent{
+    char ime[25];
+    char prezime[30];
+    short int dan,mje,god;
+    float tek_rac;
+    float dev_rac;
+    int ai,bi,ci,di;
+};
+struct trans {
+klijent el[1000];
+int front, rear;
+};
+trans red;
+trans red1;
+int AddOne (int n) {
+    return ((n+1)%1000);}
+klijent FrontQ (trans red) {
+return red.el[red.front];}
+void EnQueueQ (klijent x, trans &red){
+red.rear=AddOne(red.rear);
+red.el[red.rear]=x;}
+void DeQueueQ (trans &red){
+red.front=AddOne(red.front);}
+bool IsEmptyQ (trans red){
+     if (AddOne(red.rear)==red.front) return true;
+     return false;}
+void InitQ (trans &red){
+red.front=0;
+red.rear=999;}
+
